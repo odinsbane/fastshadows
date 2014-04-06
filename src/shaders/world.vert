@@ -32,5 +32,4 @@ void main() {
     float cosAngIncidence = dot(normal, dirToLight);
 
     meshColor = (color* lightIntensity*cosAngIncidence ) + color * ambientIntensity;
-    
 }

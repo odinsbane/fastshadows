@@ -10,7 +10,7 @@
 #define __Shadow_Volumes__Camera__
 
 #include <iostream>
-
+#include <stdio.h>
 #ifndef __APPLE__
 #include <GL/glew.h>
 #include "GLFW/glfw3.h"
@@ -49,6 +49,7 @@ public:
     void zoom(double dr);
     void updatePosition();
     void updateLights();
+    void setLightPosition(float x, float y, float z);
     
 };
 

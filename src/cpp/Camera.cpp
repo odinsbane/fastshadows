@@ -13,7 +13,7 @@ Camera::Camera(GLuint &program){
     aspect = 1.0f;
     setPerspectiveMatrix();
     
-    r = 1;
+    r = 3;
     for(int i = 0; i<4; i++){
         quarternion[i] = 0.0;
     }
@@ -26,6 +26,14 @@ Camera::Camera(GLuint &program){
     ambient_light = new float[4]{0.5, 0.5, 0.5, 1.0};
     updateLights();
     
+}
+
+void Camera::setLightPosition(float x, float y, float z){
+
+    light_position[0]=x;
+    light_position[1]=y;
+    light_position[2]=z;
+    updateLights();
 }
 
 void Camera::setPosition(){
@@ -185,10 +193,7 @@ void Camera::resizeWindow(float w, float h){
 }
 
 void Camera::updateLights(){
-    float cast[2]{0,0};
-    cast[0] = -light_position[0]*0.5/light_position[2];
-    cast[1] = -light_position[1]*0.5/light_position[2];
-    
+
     GLuint lightPositionUniform = glGetUniformLocation(theProgram, "lightPos");
     GLuint lightIntensityUniform = glGetUniformLocation(theProgram, "lightIntensity");
     GLuint ambientIntensityUniform = glGetUniformLocation(theProgram, "ambientIntensity");
@@ -199,8 +204,7 @@ void Camera::updateLights(){
     glUniform4fv(lightIntensityUniform, 1, light_intensity);
     
     glUniform4fv(ambientIntensityUniform, 1, ambient_light);
-    printf("pos: %d int: %d amb: %d\n", lightPositionUniform, lightIntensityUniform, ambientIntensityUniform);
-    
+
     glUseProgram(0);
     
     

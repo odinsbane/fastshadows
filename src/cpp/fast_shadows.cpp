@@ -28,7 +28,8 @@ int main(int argc, char** args){
     createScene(program);
     Camera* cam = new Camera(program);
     InputAdapter* adapter = new InputAdapter(cam, window);
-    
+    float time = 0;
+    float dt = 0.01;
     while( adapter->running ){
         
         drawScene(program);
@@ -39,7 +40,8 @@ int main(int argc, char** args){
         /* Poll for and process events */
         glfwPollEvents();
         adapter->update();
-
+        time += dt;
+        cam->setLightPosition(5*sin(time), 5*cos(time), 10);
     }
     
 }
@@ -83,16 +85,19 @@ void calculateNormal(float* a, float* b, float* c, float* n){
         ab[i]= b[i] - a[i];
         ac[i] = c[i] - a[i];
     }
-    
+
+
+
     n[0] = ab[1]*ac[2] - ab[2]*ac[1];
     n[1] = ab[2]*ac[0] - ab[0]*ac[2];
     n[2] = ab[0]*ac[1] - ab[1]*ac[0];
     
+
     float l = sqrt(n[0]*n[0] + n[1]*n[1] + n[2]*n[2]);
     n[0] = n[0]/l;
     n[1] = n[1]/l;
     n[2] = n[2]/l;
-    
+
 }
 
 void createVertexBuffer(float* positions,int* indices, int triangles, float* output){
@@ -144,7 +149,7 @@ void createScene(GLuint program){
     float* tetraVertices = new float[72];
     
     createVertexBuffer(tetrahedron, tetdex, 4, tetraVertices);
-    
+
     float ground[12]{
         -4, -4, 0,
         -4, 4, 0,
@@ -180,7 +185,6 @@ void createScene(GLuint program){
         1, 5, 6,  1, 6, 2,  //back
         0, 4, 1,  1, 4, 5   //left
     };
-
     float* towerVertices = new float[2*12*3*3];
     createVertexBuffer(tower, tdex, 12, towerVertices);
     
@@ -195,13 +199,13 @@ void createScene(GLuint program){
     glBufferData(GL_ARRAY_BUFFER, sizeof(float)*72, tetraVertices, GL_STATIC_DRAW);
     
     glBindBuffer(GL_ARRAY_BUFFER, bufferObject[1]);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(float)*24,groundVertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(float)*36,groundVertices, GL_STATIC_DRAW);
 
     glBindBuffer(GL_ARRAY_BUFFER, bufferObject[2]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(float)*216, towerVertices, GL_STATIC_DRAW);
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    int sizes[]{36*sizeof(float), 12*sizeof(float), 108*sizeof(float)};
+    int sizes[]{36*sizeof(float), 18*sizeof(float), 108*sizeof(float)};
     GLuint positionAttribute = glGetAttribLocation(program, "position");
     GLuint normalAttribute = glGetAttribLocation(program, "normal");
     printf("pos, norm: %d, %d \n", positionAttribute, normalAttribute);
@@ -223,6 +227,9 @@ void createScene(GLuint program){
     glUseProgram(0);
     
     
-    
+    delete[] tetraVertices;
+    delete[] towerVertices;
+    delete[] groundVertices;
+
 }
 
