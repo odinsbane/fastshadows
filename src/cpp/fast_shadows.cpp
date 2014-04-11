@@ -21,6 +21,7 @@ void graphicsLoop(GLuint program, GLFWwindow* window);
 
 GLuint VAO[3];
 
+
 int main(int argc, char** args){
     
     GLFWwindow* window = Framework::initializeWindow();
@@ -45,6 +46,8 @@ int main(int argc, char** args){
     }
     
 }
+
+
 float tetraColor[]{1,1,1,1};
 float towerColor[]{1,0,0,1};
 float groundColor[]{0,0,1,1};
@@ -205,7 +208,7 @@ void createScene(GLuint program){
     glBufferData(GL_ARRAY_BUFFER, sizeof(float)*216, towerVertices, GL_STATIC_DRAW);
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    int sizes[]{36*sizeof(float), 18*sizeof(float), 108*sizeof(float)};
+    long sizes[]{36*sizeof(float), 18*sizeof(float), 108*sizeof(float)};
     GLuint positionAttribute = glGetAttribLocation(program, "position");
     GLuint normalAttribute = glGetAttribLocation(program, "normal");
     printf("pos, norm: %d, %d \n", positionAttribute, normalAttribute);
