@@ -9,15 +9,6 @@
 #ifndef __Shadow_Volumes__InputAdapter__
 #define __Shadow_Volumes__InputAdapter__
 
-#ifndef __APPLE__
-#include <GL/glew.h>
-#include "GLFW/glfw3.h"
-#else
-#define GLFW_INCLUDE_GLCOREARB
-#define GLFW_NO_GLU
-#include "GLFW/glfw3.h"
-#endif
-
 #include "Camera.h"
 #include <iostream>
 class InputAdapter{

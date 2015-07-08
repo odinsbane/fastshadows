@@ -11,14 +11,7 @@
 
 #include <iostream>
 #include <stdio.h>
-#ifndef __APPLE__
-#include <GL/glew.h>
-#include "GLFW/glfw3.h"
-#else
-#define GLFW_INCLUDE_GLCOREARB
-#define GLFW_NO_GLU
-#include "GLFW/glfw3.h"
-#endif
+#include "Framework.h"
 
 #include "math.h"
 

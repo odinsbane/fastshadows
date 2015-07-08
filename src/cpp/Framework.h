@@ -13,9 +13,11 @@
 
 
 #ifndef __APPLE__
+#define GLFW_INCLUDE_GLCOREARB
+#define GLFW_NO_GLU
 #include <GL/glew.h>
 #include "GLFW/glfw3.h"
-#define SHADER_VERSION_STRING "#version 130\n\n"
+#define SHADER_VERSION_STRING "#version 150\n\n"
 #else
 #define GLFW_INCLUDE_GLCOREARB
 #define GLFW_NO_GLU

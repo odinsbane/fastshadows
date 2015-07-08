@@ -1,11 +1,8 @@
 /**
-*
-*   This program is an implementation of "Fast, Practical and Robust Shadows"
-*   by Morgan McGuire, John F. Hughes, and Kevin T. Egan Brown University
-*   Mark J. Kilgard and Cass Everitt NVIDIA Corporation
 *   
-*   It is intended to be a minimal implementation for plugable use, and 
-*   improving rendering of scientific applications.
+*   This is intended to be a minimal implementation of stencil shadows 
+*   for plugable use, and improving rendering of scientific 
+*   applications.
 *
 *
 **/
@@ -216,6 +213,7 @@ void createScene(GLuint program){
     
     glGenVertexArrays(3, VAO);
     
+    printf("generated\n");
     for(int i = 0; i<3; i++){
         glBindVertexArray(VAO[i]);
         
