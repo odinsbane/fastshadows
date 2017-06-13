@@ -130,16 +130,8 @@ namespace Framework
         //exit(0);
         
         glEnable(GL_DEPTH_TEST);
+        glDepthFunc(GL_LESS);
         
-        glDepthFunc(GL_LEQUAL);
-        glDepthMask(GL_TRUE);
-        glDepthRange(0.0f, 1.0f);
-        
-        glClearColor( 0.02f, 0.02f, 0.02f, 0.0f );
-        glClearDepth( 1.0f );
-        glEnable(GL_CULL_FACE);
-        glCullFace(GL_BACK);
-        glFrontFace(GL_CCW);
         printf("setup\n");
         
         return window;
@@ -153,6 +145,15 @@ namespace Framework
         
         shaderList.push_back(Framework::LoadShader(GL_VERTEX_SHADER, "shaders/world.vert"));
         shaderList.push_back(Framework::LoadShader(GL_FRAGMENT_SHADER, "shaders/color.frag"));
+        return Framework::CreateProgram(shaderList);
+    }
+    
+    GLuint loadShadowProgram(){
+        //Load program.
+        std::vector<GLuint> shaderList;
+        
+        shaderList.push_back(Framework::LoadShader(GL_VERTEX_SHADER, "shaders/shadows.vert"));
+        shaderList.push_back(Framework::LoadShader(GL_FRAGMENT_SHADER, "shaders/shadows.frag"));
         return Framework::CreateProgram(shaderList);
     }
     

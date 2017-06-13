@@ -13,7 +13,7 @@
 #include "math.h"
 
 void createScene(GLuint program);
-void drawScene(GLuint program);
+void drawScene(GLuint program, Camera* camera);
 void graphicsLoop(GLuint program, GLFWwindow* window);
 
 GLuint VAO[3];
@@ -23,14 +23,16 @@ int main(int argc, char** args){
     
     GLFWwindow* window = Framework::initializeWindow();
     GLuint program = Framework::loadProgram();
+    GLuint shadowProgram = Framework::loadShadowProgram();
     createScene(program);
-    Camera* cam = new Camera(program);
+    Camera* cam = new Camera(program, shadowProgram);
+    cam->setFrameBufferTarget();
     InputAdapter* adapter = new InputAdapter(cam, window);
     float time = 0;
     float dt = 0.01;
     while( adapter->running ){
         
-        drawScene(program);
+        drawScene(program, cam);
         
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -49,29 +51,60 @@ float tetraColor[]{1,1,1,1};
 float towerColor[]{1,0,0,1};
 float groundColor[]{0,0,1,1};
 
-void drawScene(GLuint program){
-    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
+void drawScene(GLuint program, Camera* camera){
+    GLuint buffer = camera->getFrameBuffer();
+    glBindFramebuffer(GL_FRAMEBUFFER, buffer);
+    
+    glViewport(0, 0, 1024, 1024);
+    //glEnable(GL_CULL_FACE);
+    //glCullFace(GL_FRONT);
+    //glFrontFace(GL_CCW);
+    // Clear the screen
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    
+    GLuint shade = camera->getShadowProgram();
+    glUseProgram(shade);
+    
+    glBindVertexArray(VAO[0]);
+    glDrawArrays(GL_TRIANGLES, 0, 12);
+    
+    glBindVertexArray(VAO[1]);
+    glDrawArrays(GL_TRIANGLES, 0, 6);
+    
+    glBindVertexArray(VAO[2]);
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+    glUseProgram(0);
+    
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    //glCullFace(GL_BACK);
+    
+    glClearColor(0.f, 0.f, 0.f, 0.0f);
     glClearDepth(1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     
+    
+    GLuint ShadowMapID = glGetUniformLocation(program, "shadowMap");
+    glActiveTexture(GL_TEXTURE0);
+    GLuint depthTexture = camera->getTextureID();
+    glBindTexture(GL_TEXTURE_2D, depthTexture);
+    glUniform1i(ShadowMapID, 0);
+    
     glUseProgram(program);
-    
     GLuint color = glGetUniformLocation(program, "inputColor");
-    
     glBindVertexArray(VAO[0]);
     glUniform4fv(color, 1, tetraColor);
     glDrawArrays(GL_TRIANGLES, 0, 12);
-
     glBindVertexArray(VAO[1]);
     glUniform4fv(color, 1, groundColor);
     glDrawArrays(GL_TRIANGLES, 0, 6);
-
     glBindVertexArray(VAO[2]);
     glUniform4fv(color, 1, towerColor);
     glDrawArrays(GL_TRIANGLES, 0, 36);
-    
+ 
     glBindVertexArray(0);
     glUseProgram(0);
+    
 }
 /**
  Assuming a,b, and c are vertices of a triangle.
@@ -188,7 +221,6 @@ void createScene(GLuint program){
     float* towerVertices = new float[2*12*3*3];
     createVertexBuffer(tower, tdex, 12, towerVertices);
     
-    glUseProgram(program);
     
     GLuint bufferObject[3];
     
@@ -206,8 +238,8 @@ void createScene(GLuint program){
     
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     long sizes[]{36*sizeof(float), 18*sizeof(float), 108*sizeof(float)};
-    GLuint positionAttribute = glGetAttribLocation(program, "position");
-    GLuint normalAttribute = glGetAttribLocation(program, "normal");
+    GLuint positionAttribute = 0;
+    GLuint normalAttribute = 1;
     printf("pos, norm: %d, %d \n", positionAttribute, normalAttribute);
 
     
@@ -225,7 +257,6 @@ void createScene(GLuint program){
         glVertexAttribPointer(normalAttribute, 3, GL_FLOAT, GL_FALSE, 0, (void*)sizes[i]);
     }
     glBindVertexArray(0);
-    glUseProgram(0);
     
     
     delete[] tetraVertices;

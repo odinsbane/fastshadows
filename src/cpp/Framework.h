@@ -22,7 +22,7 @@
 #define GLFW_INCLUDE_GLCOREARB
 #define GLFW_NO_GLU
 #include "GLFW/glfw3.h"
-#define SHADER_VERSION_STRING "#version 150\n\n"
+#define SHADER_VERSION_STRING "#version 330\n\n"
 #endif
 
 
@@ -43,6 +43,7 @@ namespace Framework
 	GLuint CreateProgram(const std::vector<GLuint> &shaderList);
     GLFWwindow* initializeWindow();
     GLuint loadProgram();
+    GLuint loadShadowProgram();
 }
 
 

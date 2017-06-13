@@ -5,5 +5,5 @@ export GLFW_PC=$1
 export GLFW_CFLAGS=$(pkg-config --cflags "$GLFW_PC")
 export GLFW_LIBS=$(pkg-config --static --libs "$GLFW_PC")
 
-g++ -std=c++11 $GLFW_CFLAGS *.cpp -lGLEW $GLFW_LIBS -o fastshadows
+g++ -std=c++11 $GLFW_CFLAGS *.cpp $GLFW_LIBS -o fastshadows
 
