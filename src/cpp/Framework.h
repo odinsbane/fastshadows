@@ -9,22 +9,15 @@
 #ifndef __Shadow_Volumes__Framework__
 #define __Shadow_Volumes__Framework__
 
+#include "glad/glad.h"
 #include <iostream>
 
 
-#ifndef __APPLE__
 #define GLFW_INCLUDE_GLCOREARB
 #define GLFW_NO_GLU
-#include <GL/glew.h>
-#include "GLFW/glfw3.h"
-#define SHADER_VERSION_STRING "#version 150\n\n"
-#else
-#define GLFW_INCLUDE_GLCOREARB
 #define GLFW_NO_GLU
 #include "GLFW/glfw3.h"
 #define SHADER_VERSION_STRING "#version 330\n\n"
-#endif
-
 
 #include <vector>
 #include <string>

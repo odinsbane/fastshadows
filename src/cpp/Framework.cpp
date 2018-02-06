@@ -111,8 +111,12 @@ namespace Framework
         glfwMakeContextCurrent(window);
         
 #ifndef __APPLE__
-        glewExperimental=true;
-        glewInit();
+        if (!gladLoadGLLoader((GLADloadproc) glfwGetProcAddress))
+        {
+            glfwTerminate();
+            printf("Failed to initialize OpenGL context\n");
+            return 0;
+        }
 #endif
         /* Create a windowed mode window and its OpenGL context */
         
